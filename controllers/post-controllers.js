@@ -1,16 +1,29 @@
-/* 
-const post = require('') */
+
+const post = require('../data/post-1.js') 
 
 // Index
 
 function index(req,res){
-    res.send('Lista dei post')
+    // res.send('Lista dei post')
+
+    res.json(post)
 }
 
 // Function Show
 
 function show(req,res){
-    res.send(`Dettaglio del posto ${req.params.slug}`)
+    // res.send(`Dettaglio del posto ${req.params.slug}`)
+
+    const postSlug = req.params.slug;
+
+    const postFound = postFound.find(postFound => postFound.slug === postSlug);
+    console.log(postFound);
+
+    if (!postFound) {
+        return res.status(404).json({ error: "Post non trovato" });
+    } 
+    
+    res.json(postFound)
 }
 
 // Function Create
