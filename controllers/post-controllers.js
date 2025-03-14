@@ -1,47 +1,52 @@
+const post = require('../data/post-1.js'); 
 
-const post = require('../data/post-1.js') 
-
-// Index
-
-function index(req,res){
-    // res.send('Lista dei post')
-
-    res.json(post)
+// Index - Restituisce tutti i post
+function index(req, res) {
+    res.json(post);
 }
 
-// Function Show
-
-function show(req,res){
-    // res.send(`Dettaglio del posto ${req.params.slug}`)
-
+// Show - Restituisce un post specifico in base allo slug
+function show(req, res) {
     const postSlug = req.params.slug;
-
-    const postFound = postFound.find(postFound => postFound.slug === postSlug);
-    console.log(postFound);
+    console.log("Slug ricevuto:", postSlug); 
+    console.log(post);
+    
+    const postFound = post.find(post => post.slug === postSlug);
 
     if (!postFound) {
         return res.status(404).json({ error: "Post non trovato" });
-    } 
+    }
+
+    res.json(postFound);
+}
+
+// Create - Crea un nuovo post (da implementare)
+function create(req, res) {
+    res.send('Creazione dei nuovi post');
+}
+
+// Update - Aggiorna un post esistente (da implementare)
+function update(req, res) {
+    res.send(`Aggiornamento del post ${req.params.slug}`);
+}
+
+// Destroy - Elimina un post
+function destroy(req, res) {
+    const postSlug = req.params.slug;
+
+    // Trova il post con lo slug corrispondente
+    const postFound = post.find(post => post.slug === postSlug);
+
+    if (!postFound) {
+        return res.status(404).json({ error: "Post non trovato" });
+    }
+
+    // Rimuove il post dall'array utilizzando l'indice trovato
+    const index = post.indexOf(postFound);
+    post.splice(index, 1); // Rimuove l'elemento all'indice trovato
     
-    res.json(postFound)
+
+    res.sendStatus(204); 
 }
 
-// Function Create
-
-function create(req,res){
-    res.send('Creazione dei nuovi posti')
-}
-
-// Function Update
-
-function update(req, res){
-    res.send(`Aggiornamento del post ${req.params.slug}`)
-}
-
-// Function Destroy
-
-function destroy(req,res){
-    res.send(`Cancellazione del post ${req.params.slug}`)
-}
-
-module.exports= {index, show, create, update, destroy}
+module.exports = { index, show, create, update, destroy };
