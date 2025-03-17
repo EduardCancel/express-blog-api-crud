@@ -74,6 +74,8 @@ function update(req, res) {
     res.status(201).json(postFound);
 
     console.log(postFound);
+    console.log(post);
+    
     
 }
 
