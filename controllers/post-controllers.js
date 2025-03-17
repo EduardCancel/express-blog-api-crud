@@ -32,10 +32,18 @@ function store(req, res) {
         content : req.body.content,
         image : req.body.image,
         tags : req.body.tags,
-
     }
 
-    console.log(req.body); 
+    // Add new post
+    post.push(newPosts)
+
+    // Controll
+    console.log(post);
+
+    // Return status
+
+    res.status(201);
+    res.json(newPosts)
     
 }
 
