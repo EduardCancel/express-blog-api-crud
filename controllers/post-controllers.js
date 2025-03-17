@@ -50,32 +50,31 @@ function store(req, res) {
 
 // Update - Aggiorna un post esistente (da implementare)
 function update(req, res) {
+    // Recuperiamo lo slug
+    const postSlug = req.params.slug;
 
-    // Recover the slug
-    const postSlug = parseInt(req.params.slug);
+    // Troviamo il post con lo slug
+    const postFound = post.find(post => post.slug === postSlug);
 
-    // Find the post with slug
-
-    const postFounds = post.find(post => post.slug === postSlug );
-
-     // If not found return 404
-
-    if (!postFounds) {
-
+    // Se il post non è trovato, restituiamo un errore 404
+    if (!postFound) {
         return res.status(404).json({
-            error: 'post not found'
+            error: 'Post non trovato'
         });
     }
 
-    postFounds.title = req.body.title;
-    postFounds.slug = req.body.title.replaceAll(' ', '-').toLowerCase();
-    postFounds.content = req.body.content;
-    postFounds.image = req.body.image;
-    postFounds.tags = req.body.tags;
-    
+    // Aggiorniamo i dati del post
+    postFound.title = req.body.title || postFound.title;
+    postFound.slug = req.body.title.replaceAll(' ', '-').toLowerCase()
+    postFound.content = req.body.content; 
+    postFound.image = req.body.image; 
+    postFound.tags = req.body.tags;
 
-    res.sendStatus(204)
-    res.json(postFounds)
+    // Restituiamo il post aggiornato con una risposta 201 OK
+    res.status(201).json(postFound);
+
+    console.log(postFound);
+    
 }
 
 // Destroy - Elimina un post
