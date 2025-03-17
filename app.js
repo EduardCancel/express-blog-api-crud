@@ -11,10 +11,16 @@ app.listen(port, () => {
     
 })
 
+
+app.use(express.json())
+
+
 // Define home route
 
 app.get('/', (req,res) => {
     res.send('Welcome to our server')
+    
+    console.log(req.body);
     
 })
 
