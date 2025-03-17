@@ -1,5 +1,6 @@
 const post = require('../data/post-1.js'); 
 
+
 // Index - Restituisce tutti i post
 function index(req, res) {
     res.json(post);
@@ -23,7 +24,7 @@ function show(req, res) {
 function store(req, res) {
 
     //  Create a new slug
-    const newSlug = post[post.length -1].slug +1;
+    const newSlug = req.body.title.toLowerCase().replaceAll(" ", "-")
 
     // Create a new object post
     const newPosts = {
@@ -49,7 +50,32 @@ function store(req, res) {
 
 // Update - Aggiorna un post esistente (da implementare)
 function update(req, res) {
-    res.send(`Aggiornamento del post ${req.params.slug}`);
+
+    // Recover the slug
+    const postSlug = parseInt(req.params.slug);
+
+    // Find the post with slug
+
+    const postFounds = post.find(post => post.slug === postSlug );
+
+     // If not found return 404
+
+    if (!postFounds) {
+
+        return res.status(404).json({
+            error: 'post not found'
+        });
+    }
+
+    postFounds.title = req.body.title;
+    postFounds.slug = req.body.title.replaceAll(' ', '-').toLowerCase();
+    postFounds.content = req.body.content;
+    postFounds.image = req.body.image;
+    postFounds.tags = req.body.tags;
+    
+
+    res.sendStatus(204)
+    res.json(postFounds)
 }
 
 // Destroy - Elimina un post
@@ -66,6 +92,8 @@ function destroy(req, res) {
     // Rimuove il post dall'array utilizzando l'indice trovato
     const index = post.indexOf(postFound);
     post.splice(index, 1); // Rimuove l'elemento all'indice trovato
+    
+    console.log(post);
     
 
     res.sendStatus(204); 
