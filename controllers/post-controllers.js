@@ -64,7 +64,7 @@ function update(req, res) {
     }
 
     // Aggiorniamo i dati del post
-    postFound.title = req.body.title || postFound.title;
+    postFound.title = req.body.title 
     postFound.slug = req.body.title.replaceAll(' ', '-').toLowerCase()
     postFound.content = req.body.content; 
     postFound.image = req.body.image; 
