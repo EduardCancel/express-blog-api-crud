@@ -20,9 +20,23 @@ function show(req, res) {
     res.json(postFound);
 }
 
-// Create - Crea un nuovo post (da implementare)
-function create(req, res) {
-    res.send('Creazione dei nuovi post');
+function store(req, res) {
+
+    //  Create a new slug
+    const newSlug = post[post.length -1].slug +1;
+
+    // Create a new object post
+    const newPosts = {
+        title: req.body.title,
+        slug: newSlug,
+        content : req.body.content,
+        image : req.body.image,
+        tags : req.body.tags,
+
+    }
+
+    console.log(req.body); 
+    
 }
 
 // Update - Aggiorna un post esistente (da implementare)
@@ -49,4 +63,4 @@ function destroy(req, res) {
     res.sendStatus(204); 
 }
 
-module.exports = { index, show, create, update, destroy };
+module.exports = { index, show, store, update, destroy, };

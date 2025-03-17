@@ -12,9 +12,10 @@ router.get('/', postControllers.index)
 
 router.get('/:slug', postControllers.show)
 
-// Create
 
-router.post('/', postControllers.create)
+// Store
+router.post('/', postControllers.store)
+
 
 // Update 
 
