@@ -1,8 +1,9 @@
-const errorHandler = ((err, req, res, next) => {
-    res.status(500)
+function notFound (req, res, next) {
+    res.status(404)
     res.json({
-        error : err.message,
+    error: "Not Found",
+    message: "Pagina non trovata"
     });
-});
-
-module.exports = errorHandler;
+    };
+    
+    module.exports = notFound;

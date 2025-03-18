@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const postsRouters = require('./routers/post-rename.js')
+const eror_404 = require('./middlewer/error_404.js')
 
 
 // Middlewer 
@@ -26,6 +27,7 @@ app.get('/', (req,res) => {
 // Midllewer invocation
 
 app.use(errorHandler);
+app.use(eror_404)
 
 
 // Server listen port 300
