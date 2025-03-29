@@ -1,103 +1,89 @@
-const post = require('../data/post-1.js'); 
-
+const post = require("../data/post-1"); // Assicurati che sia un array
 
 // Index - Restituisce tutti i post
 function index(req, res) {
+  const tag = req.query.tags;
+  const filteredPost = post.filter(
+    (thisPost) => thisPost.tags && thisPost.tags.includes(tag)
+  );
+  if (tag) {
+    return res.json(filteredPost);
+  } else {
     res.json(post);
+  }
 }
 
 // Show - Restituisce un post specifico in base allo slug
 function show(req, res) {
-    const postSlug = req.params.slug;
-    console.log("Slug ricevuto:", postSlug); 
-    console.log(post);
-    
-    const postFound = post.find(post => post.slug === postSlug);
+  const postSlug = req.params.slug;
+  console.log("Slug ricevuto:", postSlug);
 
-    if (!postFound) {
-        return res.status(404).json({ error: "Post non trovato" });
-    }
+  const postFound = post.find((p) => p.slug === postSlug);
 
-    res.json(postFound);
+  if (!postFound) {
+    return res.status(404).json({ error: "Post non trovato" });
+  }
+
+  res.json(postFound);
 }
 
+// Store - Crea un nuovo post
 function store(req, res) {
+  if (!req.body.title || !req.body.content) {
+    return res
+      .status(400)
+      .json({ error: "Titolo e contenuto sono obbligatori" });
+  }
 
-    //  Create a new slug
-    const newSlug = req.body.title.toLowerCase().replaceAll(" ", "-")
+  const newSlug = req.body.title.toLowerCase().split(" ").join("-");
 
-    // Create a new object post
-    const newPosts = {
-        title: req.body.title,
-        slug: newSlug,
-        content : req.body.content,
-        image : req.body.image,
-        tags : req.body.tags,
-    }
+  const newPost = {
+    title: req.body.title,
+    slug: newSlug,
+    content: req.body.content,
+    image: req.body.image || "",
+    tags: req.body.tags || [],
+  };
 
-    // Add new post
-    post.push(newPosts)
+  post.push(newPost);
 
-    // Controll
-    console.log(post);
-
-    // Return status
-
-    res.status(201);
-    res.json(newPosts)
-    
+  console.log("Post aggiunto:", newPost);
+  res.status(201).json(newPost);
 }
 
-// Update - Aggiorna un post esistente (da implementare)
+// Update - Aggiorna un post esistente
 function update(req, res) {
-    // Recuperiamo lo slug
-    const postSlug = req.params.slug;
+  const postSlug = req.params.slug;
+  const postFound = post.find((p) => p.slug === postSlug);
 
-    // Troviamo il post con lo slug
-    const postFound = post.find(post => post.slug === postSlug);
+  if (!postFound) {
+    return res.status(404).json({ error: "Post non trovato" });
+  }
 
-    // Se il post non è trovato, restituiamo un errore 404
-    if (!postFound) {
-        return res.status(404).json({
-            error: 'Post non trovato'
-        });
-    }
+  postFound.title = req.body.title || postFound.title;
+  postFound.slug = req.body.title
+    ? req.body.title.split(" ").join("-").toLowerCase()
+    : postFound.slug;
+  postFound.content = req.body.content || postFound.content;
+  postFound.image = req.body.image || postFound.image;
+  postFound.tags = req.body.tags || postFound.tags;
 
-    // Aggiorniamo i dati del post
-    postFound.title = req.body.title 
-    postFound.slug = req.body.title.replaceAll(' ', '-').toLowerCase()
-    postFound.content = req.body.content; 
-    postFound.image = req.body.image; 
-    postFound.tags = req.body.tags;
-
-    // Restituiamo il post aggiornato con una risposta 201 OK
-    res.status(201).json(postFound);
-
-    console.log(postFound);
-    console.log(post);
-    
-    
+  console.log("Post aggiornato:", postFound);
+  res.status(200).json(postFound);
 }
 
 // Destroy - Elimina un post
 function destroy(req, res) {
-    const postSlug = req.params.slug;
+  const postSlug = req.params.slug;
+  const index = post.findIndex((p) => p.slug === postSlug);
 
-    // Trova il post con lo slug corrispondente
-    const postFound = post.find(post => post.slug === postSlug);
+  if (index === -1) {
+    return res.status(404).json({ error: "Post non trovato" });
+  }
 
-    if (!postFound) {
-        return res.status(404).json({ error: "Post non trovato" });
-    }
-
-    // Rimuove il post dall'array utilizzando l'indice trovato
-    const index = post.indexOf(postFound);
-    post.splice(index, 1); // Rimuove l'elemento all'indice trovato
-    
-    console.log(post);
-    
-
-    res.sendStatus(204); 
+  post.splice(index, 1);
+  console.log("Post eliminato:", postSlug);
+  res.sendStatus(204);
 }
 
-module.exports = { index, show, store, update, destroy, };
+module.exports = { index, show, store, update, destroy };

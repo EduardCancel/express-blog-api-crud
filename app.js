@@ -1,38 +1,29 @@
-const express = require('express');
-const app = express();
+const express = require("express");
+const cors = require("cors");
+const path = require("path"); // Importa il modulo path per gestire i percorsi
+const postRoutes = require("./routers/post-rename"); // Aggiungi il tuo router
+
+const app = express(); // Crea l'istanza di express
+
+// Abilita CORS su tutte le richieste
+app.use(cors());
+
+// Middleware per gestire i body in formato JSON
+app.use(express.json());
+
+// Serve le immagini dalla cartella "public/images"
+app.use("/images", express.static(path.join(__dirname, "public", "img")));
+
+// Usa il router delle rotte
+app.use("/api/v1/post", postRoutes);
+
+// Definisci altre rotte se necessario (es. root route)
+app.get("/", (req, res) => {
+  res.send("Benvenuto nel server!");
+});
+
+// Avvia il server
 const port = 3000;
-const postsRouters = require('./routers/post-rename.js')
-const eror_404 = require('./middlewer/error_404.js')
-
-
-// Middlewer 
-const errorHandler = require('./middlewer/error_500.js')
-
-// Route Global
-app.use(express.json())
-app.use("/api/v1/post",postsRouters);
-
-
-
-// Define home route
-
-app.get('/', (req,res) => {
-    res.send('Welcome to our server')
-    
-    console.log(req.body);
-    
-})
-
-
-// Midllewer invocation
-
-app.use(errorHandler);
-app.use(eror_404)
-
-
-// Server listen port 300
-
 app.listen(port, () => {
-    console.log(`Serve in ascolto su http://localhost:${port}`);
-    
-})
+  console.log(`Server in ascolto su http://localhost:${port}`);
+});

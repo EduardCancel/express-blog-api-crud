@@ -1,28 +1,20 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const postControllers = require('../controllers/post-controllers.js')
+const postControllers = require("../controllers/post-controllers.js"); // Assicurati che il percorso sia corretto
 
+// Index - Restituisce tutti i post
+router.get("/", postControllers.index);
 
-// Index
+// Show - Restituisce un post specifico in base allo slug
+router.get("/:slug", postControllers.show);
 
-router.get('/', postControllers.index)
+// Store - Crea un nuovo post
+router.post("/", postControllers.store);
 
+// Update - Aggiorna un post esistente
+router.put("/:slug", postControllers.update);
 
-// Show
-
-router.get('/:slug', postControllers.show)
-
-
-// Store
-router.post('/', postControllers.store)
-
-
-// Update 
-
-router.put('/:slug', postControllers.update)
-
-// Destroy
-
-router.delete('/:slug', postControllers.destroy)
+// Destroy - Elimina un post
+router.delete("/:slug", postControllers.destroy);
 
 module.exports = router;
